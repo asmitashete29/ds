@@ -1,0 +1,83 @@
+#include <iostream>
+using namespace std;
+
+struct Node {
+    int job;
+    Node* next;
+};
+
+Node* front = NULL;
+Node* rear = NULL;
+int count = 0;
+int m;
+
+void addJob() {
+    if (count == m) {
+        cout << "Queue is Full!\n";
+        return;
+    }
+    Node* n = new Node;
+    cout << "Enter Job Number: ";
+    cin >> n->job;
+    n->next = NULL;
+
+    if (front == NULL)
+        front = rear = n;
+    else {
+        rear->next = n;
+        rear = n;
+    }
+    count++;
+    cout << "Job Added Successfully!\n";
+}
+
+void deleteJob() {
+    if (front == NULL) {
+        cout << "Queue is Empty!\n";
+        return;
+    }
+    Node* temp = front;
+    cout << "Deleted Job: " << temp->job << endl;
+    front = front->next;
+    if (front == NULL) rear = NULL;
+    delete temp;
+    count--;
+}
+
+void display() {
+    if (front == NULL) {
+        cout << "Queue is Empty!\n";
+        return;
+    }
+    cout << "Jobs in Queue: ";
+    for (Node* t = front; t != NULL; t = t->next)
+        cout << t->job << " ";
+    cout << endl;
+}
+
+int main() {
+    cout << "Name: Asmita Shete" << endl;
+    cout << "Roll No: 240" << endl;
+    cout << "Enter Maximum Queue Size: ";
+    cin >> m;
+
+    int choice;
+    do {
+        cout << "\n--- JOB QUEUE ---\n";
+        cout << "1. Add Job\n2. Delete Job\n3. Display Jobs\n4. Exit\n";
+        cout << "Enter Choice: ";
+        cin >> choice;
+
+        if (choice == 1) {
+            int n;
+            cout << "How many jobs do you want to add? ";
+            cin >> n;
+            for (int i = 0; i < n; i++) addJob();
+        }
+        else if (choice == 2) deleteJob();
+        else if (choice == 3) display();
+        else if (choice == 4) cout << "Program Ended!\n";
+        else cout << "Invalid Choice!\n";
+    } while (choice != 4);
+    return 0;
+}
