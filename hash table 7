@@ -1,0 +1,208 @@
+#include <iostream>
+#include <string>
+using namespace std;
+
+const int TABLE_SIZE = 10;
+
+struct Client {
+    string name;
+    string phone;
+    bool occupied;
+
+    Client() {
+        name = "";
+        phone = "";
+        occupied = false;
+    }
+};
+
+class TelephoneDirectory {
+private:
+    Client table[TABLE_SIZE];
+
+    // Hash function
+    int hashFunction(string name) {
+        int hash = 0;
+
+        for (int i = 0; i < name.length(); i++) {
+    char ch = name[i];
+    hash = (hash * 31 + ch) % TABLE_SIZE;
+
+        }
+
+        return hash;
+    }
+
+public:
+
+    // ---------------- LINEAR PROBING ----------------
+    void insertLinear(string name, string phone) {
+        int index = hashFunction(name);
+        int start = index;
+
+        while (table[index].occupied) {
+            index = (index + 1) % TABLE_SIZE;
+
+            // Table is full
+            if (index == start) {
+                cout << "Hash table is full!\n";
+                return;
+            }
+        }
+
+        table[index].name = name;
+        table[index].phone = phone;
+        table[index].occupied = true;
+
+        cout << "Client inserted at index " << index << endl;
+    }
+
+    // ---------------- QUADRATIC PROBING ----------------
+    void insertQuadratic(string name, string phone) {
+        int index = hashFunction(name);
+
+        for (int i = 0; i < TABLE_SIZE; i++) {
+            int newIndex = (index + i * i) % TABLE_SIZE;
+
+            if (!table[newIndex].occupied) {
+                table[newIndex].name = name;
+                table[newIndex].phone = phone;
+                table[newIndex].occupied = true;
+
+                cout << "Client inserted at index "
+                     << newIndex << endl;
+                return;
+            }
+        }
+
+        cout << "Hash table is full!\n";
+    }
+
+    // Search using linear probing
+    void searchLinear(string name) {
+        int index = hashFunction(name);
+        int start = index;
+
+        while (table[index].occupied) {
+            if (table[index].name == name) {
+                cout << "Telephone number of " << name
+                     << " : " << table[index].phone << endl;
+                return;
+            }
+
+            index = (index + 1) % TABLE_SIZE;
+
+            if (index == start)
+                break;
+        }
+
+        cout << "Client not found!\n";
+    }
+
+    // Search using quadratic probing
+    void searchQuadratic(string name) {
+        int index = hashFunction(name);
+
+        for (int i = 0; i < TABLE_SIZE; i++) {
+            int newIndex = (index + i * i) % TABLE_SIZE;
+
+            if (!table[newIndex].occupied)
+                break;
+
+            if (table[newIndex].name == name) {
+                cout << "Telephone number of " << name
+                     << " : " << table[newIndex].phone << endl;
+                return;
+            }
+        }
+
+        cout << "Client not found!\n";
+    }
+
+    // Display hash table
+    void display() {
+        cout << "\n--- Telephone Directory ---\n";
+
+        for (int i = 0; i < TABLE_SIZE; i++) {
+            cout << "Index " << i << " : ";
+
+            if (table[i].occupied)
+                cout << table[i].name << " -> "
+                     << table[i].phone;
+            else
+                cout << "Empty";
+
+            cout << endl;
+        }
+    }
+};
+
+int main() {
+    TelephoneDirectory directory;
+   cout <<"Asmita shete\n";
+    int choice;
+    string name, phone;
+
+    do {
+        cout << "\n===== TELEPHONE DIRECTORY =====\n";
+        cout << "1. Insert using Linear Probing\n";
+        cout << "2. Search using Linear Probing\n";
+        cout << "3. Insert using Quadratic Probing\n";
+        cout << "4. Search using Quadratic Probing\n";
+        cout << "5. Display Hash Table\n";
+        cout << "6. Exit\n";
+        cout << "Enter choice: ";
+        cin >> choice;
+
+        switch (choice) {
+
+        case 1:
+            cout << "Enter client name: ";
+            cin >> name;
+
+            cout << "Enter telephone number: ";
+            cin >> phone;
+
+            directory.insertLinear(name, phone);
+            break;
+
+        case 2:
+            cout << "Enter client name to search: ";
+            cin >> name;
+
+            directory.searchLinear(name);
+            break;
+
+        case 3:
+            cout << "Enter client name: ";
+            cin >> name;
+
+            cout << "Enter telephone number: ";
+            cin >> phone;
+
+            directory.insertQuadratic(name, phone);
+            break;
+
+        case 4:
+            cout << "Enter client name to search: ";
+            cin >> name;
+
+            directory.searchQuadratic(name);
+            break;
+
+        case 5:
+            directory.display();
+            break;
+
+        case 6:
+            cout << "Exiting...\n";
+            break;
+
+        default:
+            cout << "Invalid choice!\n";
+        }
+
+    } while (choice != 6);
+
+    return 0;
+}
