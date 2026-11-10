@@ -1,0 +1,49 @@
+#include <iostream>
+#include <vector>
+#include <string>
+#include <map>
+#include <utility>
+
+using namespace std;
+
+class FlightGraph {
+    // Adjacency List
+    map<string, vector<pair<string, float>>> adjList;
+
+public:
+    // Add flight between two cities
+    void addFlight(string u, string v, float time) {
+        adjList[u].push_back(make_pair(v, time));
+        adjList[v];
+    }
+
+    // Display Adjacency List
+    void displayAdjacencyList() {
+        cout << "\n--- Flight Network Adjacency List ---\n";
+
+        for (auto entry : adjList) {
+            cout << entry.first << " -> ";
+
+            for (auto neighbor : entry.second) {
+                cout << "[" << neighbor.first
+                     << ", " << neighbor.second
+                     << " hrs] ";
+            }
+
+            cout << endl;
+        }
+    }
+};
+
+int main() {
+    FlightGraph flight;
+
+    flight.addFlight("Mumbai", "Pune", 1.0);
+    flight.addFlight("Mumbai", "Delhi", 2.5);
+    flight.addFlight("Pune", "Goa", 1.5);
+    flight.addFlight("Delhi", "Chennai", 2.8);
+
+    flight.displayAdjacencyList();
+
+    return 0;
+}
